@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Frontend Test</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 1rem;
+      }
+      .test-item {
+        padding: 1rem;
+        margin: 1rem 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+      }
+      .pass {
+        background-color: #e8f5e9;
+        border-left: 4px solid #4caf50;
+      }
+      .fail {
+        background-color: #ffebee;
+        border-left: 4px solid #f44336;
+      }
+      .status {
+        font-weight: bold;
+        margin-right: 0.5rem;
+      }
+      h1 {
+        color: #2196f3;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Frontend Structure Test</h1>
+    <p>Testing if all frontend files are properly created and accessible...</p>
+
+    <div id="testResults"></div>
+
+    <script type="module">
+      import('src/utils/constants.js')
+        .then(() => addTest('constants.js', true))
+        .catch((e) => {
+          console.error('Constants import error:', e);
+          addTest('constants.js', false);
+        });
+
+      import('src/utils/validators.js')
+        .then(() => addTest('validators.js', true))
+        .catch((e) => {
+          console.error('Validators import error:', e);
+          addTest('validators.js', false);
+        });
+
+      import('src/services/apiService.js')
+        .then(() => addTest('apiService.js', true))
+        .catch((e) => {
+          console.error('API Service import error:', e);
+          addTest('apiService.js', false);
+        });
+
+      import('src/services/authService.js')
+        .then(() => addTest('authService.js', true))
+        .catch((e) => {
+          console.error('Auth Service import error:', e);
+          addTest('authService.js', false);
+        });
+
+      import('src/components/calendar.js')
+        .then(() => addTest('calendar.js', true))
+        .catch((e) => {
+          console.error('Calendar import error:', e);
+          addTest('calendar.js', false);
+        });
+
+      import('src/components/metrics.js')
+        .then(() => addTest('metrics.js', true))
+        .catch((e) => {
+          console.error('Metrics import error:', e);
+          addTest('metrics.js', false);
+        });
+
+      import('src/components/header.js')
+        .then(() => addTest('header.js', true))
+        .catch((e) => {
+          console.error('Header import error:', e);
+          addTest('header.js', false);
+        });
+
+      // Test CSS loading
+      const cssLoaded = document.styleSheets.length > 0;
+      setTimeout(() => addTest('style.css', cssLoaded), 500);
+
+      // Test HTML files fetch
+      fetch('src/pages/login.html')
+        .then((r) => addTest('login.html', r.ok))
+        .catch(() => addTest('login.html', false));
+
+      fetch('src/pages/register.html')
+        .then((r) => addTest('register.html', r.ok))
+        .catch(() => addTest('register.html', false));
+
+      fetch('src/pages/dashboard.html')
+        .then((r) => addTest('dashboard.html', r.ok))
+        .catch(() => addTest('dashboard.html', false));
+
+      function addTest(name, passed) {
+        const resultsDiv = document.getElementById('testResults');
+        const testDiv = document.createElement('div');
+        testDiv.className = `test-item ${passed ? 'pass' : 'fail'}`;
+        testDiv.innerHTML = `
+          <span class="status">${passed ? '✓ PASS' : '✗ FAIL'}</span>
+          <span>${name}</span>
+        `;
+        resultsDiv.appendChild(testDiv);
+      }
+
+      // Show API configuration
+      setTimeout(() => {
+        const configDiv = document.createElement('div');
+        configDiv.innerHTML = `
+          <h2>Configuration</h2>
+          <p><strong>API Base URL:</strong> http://localhost:3000/api</p>
+          <p><strong>Token Storage:</strong> localStorage (key: workout_jwt_token)</p>
+          <p><a href="index.html">Go to Application →</a></p>
+        `;
+        document.body.appendChild(configDiv);
+      }, 1000);
+    </script>
+  </body>
+</html>

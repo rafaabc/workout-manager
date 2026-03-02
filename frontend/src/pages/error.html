@@ -1,0 +1,13 @@
+<div class="auth-container">
+  <div class="auth-box">
+    <h2>Oops!</h2>
+    <p>There was a problem connecting to the server.</p>
+    <p>Please check your internet connection or try again later.</p>
+    <button class="btn-primary" id="retryBtn">Retry</button>
+  </div>
+</div>
+<script>
+  document.getElementById('retryBtn').addEventListener('click', () => {
+    window.location.href = 'index.html?page=login';
+  });
+</script>

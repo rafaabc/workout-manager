@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
 import swaggerDocument from '../resources/swagger.json' with { type: 'json' };
 import authMiddleware from './middleware/auth.js';
@@ -8,6 +9,7 @@ import workoutRoutes from './routes/workoutRoutes.js';
 import metricsRoutes from './routes/metricsRoutes.js';
 
 const app = express();
+app.use(cors());
 app.use(bodyParser.json());
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

@@ -11,6 +11,24 @@ const currentMonth = now.getMonth() + 1;
 const currentYear = now.getFullYear();
 
 describe('UR-3: Metrics for Planned vs. Actual Workouts', function () {
+  it('0 | New user starts with empty metrics structure', async function () {
+    const user = { username: randomUsername('met0'), password: validPassword() };
+    await request(baseURL).post('/api/users/register').send(user);
+    const resLogin = await request(baseURL).post('/api/users/login').send(user);
+    const token = resLogin.body.token;
+
+    const res = await request(baseURL)
+      .get('/api/metrics')
+      .set('Authorization', `Bearer ${token}`);
+
+    expect(res.status).to.equal(200);
+    expect(res.body).to.have.property('goal');
+    expect(res.body.goal).to.equal(0);
+    expect(res.body).to.have.property('monthlyData');
+    expect(res.body.monthlyData).to.be.an('array').with.lengthOf(12);
+    res.body.monthlyData.forEach((m) => expect(m.totalWorkouts).to.equal(0));
+  });
+
   it('1 | Set a valid annual workout goal.', async function () {
     const user = { username: randomUsername('met1'), password: validPassword() };
     await request(baseURL).post('/api/users/register').send(user);
@@ -23,6 +41,7 @@ describe('UR-3: Metrics for Planned vs. Actual Workouts', function () {
       .send(goal);
     expect(res.status).to.equal(200);
     expect(res.body).to.have.property('message');
+    expect(res.body).to.have.property('goal', 100);
   });
 
   it('2 | Set an invalid annual goal', async function () {
@@ -58,7 +77,9 @@ describe('UR-3: Metrics for Planned vs. Actual Workouts', function () {
     expect(res.status).to.equal(200);
     expect(res.body).to.have.property('totalMonth');
     expect(res.body.totalMonth).to.equal(1);
-    
+    // monthlyData should reflect 1 workout in current month
+    expect(res.body).to.have.property('monthlyData');
+    expect(res.body.monthlyData[currentMonth - 1].totalWorkouts).to.equal(1);
   });
 
   it('4 | Calculate total workouts completed in the year', async function () {
@@ -132,6 +153,7 @@ describe('UR-3: Metrics for Planned vs. Actual Workouts', function () {
     expect(res.status).to.equal(200);
     expect(res.body.totalMonth).to.equal(2);
     expect(res.body.totalYear).to.equal(2);
+    expect(res.body.monthlyData[currentMonth - 1].totalWorkouts).to.equal(2);
     const expectedPerc2 = Math.round((2 / 100) * 100);
     expect(res.body.percentage).to.equal(expectedPerc2);
   });

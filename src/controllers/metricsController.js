@@ -12,8 +12,8 @@ export function getMetrics(req, res) {
 export function setGoal(req, res) {
   try {
     const { goal } = req.body;
-    metricsService.setGoal(req.user.username, goal);
-    res.status(200).json({ message: 'Annual goal set' });
+    const updated = metricsService.setGoal(req.user.username, goal);
+    res.status(200).json({ message: 'Annual goal set', goal: updated });
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
