@@ -52,7 +52,7 @@ These tests are intended for local execution only and are not automatically run 
 - `POST /api/users/register` — User registration
 - `POST /api/users/login` — Login (returns JWT)
 - `POST /api/users/logout` — Logout
-- `GET /api/workouts/calendar?month=2&year=2026` — List workouts
+- `GET /api/workouts/calendar?month=<number>&year=<number>` — List workouts for given month/year
 - `POST /api/workouts/calendar` — Schedule workout `{ day, month, year }`
 - `DELETE /api/workouts/calendar` — Unschedule workout `{ day, month, year }`
 - `GET /api/metrics` — User metrics

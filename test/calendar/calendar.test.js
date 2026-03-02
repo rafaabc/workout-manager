@@ -5,6 +5,11 @@ const baseURL = process.env.BASE_URL;
 
 import { randomUsername, validPassword, randomDay } from '../testUtils.js';
 
+// compute current month/year for tests
+const now = new Date();
+const currentMonth = now.getMonth() + 1;
+const currentYear = now.getFullYear();
+
 let token, user, workout1, workout2;
 
 describe("UR-2: Set workouts in the calendar", function () {
@@ -13,7 +18,7 @@ describe("UR-2: Set workouts in the calendar", function () {
     await request(baseURL).post("/api/users/register").send(user);
     const resLogin = await request(baseURL).post("/api/users/login").send(user);
     const token = resLogin.body.token;
-    const workout = { day: randomDay(), month: 2, year: 2026 };
+    const workout = { day: randomDay(), month: currentMonth, year: currentYear };
     const res = await request(baseURL)
       .post("/api/workouts/calendar")
       .set("Authorization", `Bearer ${token}`)
@@ -27,7 +32,7 @@ describe("UR-2: Set workouts in the calendar", function () {
     await request(baseURL).post("/api/users/register").send(user);
     const resLogin = await request(baseURL).post("/api/users/login").send(user);
     const token = resLogin.body.token;
-    const workout = { day: randomDay(), month: 2, year: 2026 };
+    const workout = { day: randomDay(), month: currentMonth, year: currentYear };
     await request(baseURL)
       .post("/api/workouts/calendar")
       .set("Authorization", `Bearer ${token}`)
@@ -45,7 +50,7 @@ describe("UR-2: Set workouts in the calendar", function () {
     await request(baseURL).post("/api/users/register").send(user);
     const resLogin = await request(baseURL).post("/api/users/login").send(user);
     const token = resLogin.body.token;
-    const workout = { day: randomDay(), month: 2, year: 2026 };
+    const workout = { day: randomDay(), month: currentMonth, year: currentYear };
     await request(baseURL)
       .post("/api/workouts/calendar")
       .set("Authorization", `Bearer ${token}`)
@@ -62,7 +67,7 @@ describe("UR-2: Set workouts in the calendar", function () {
     await request(baseURL).post("/api/users/register").send(user);
     const resLogin = await request(baseURL).post("/api/users/login").send(user);
     const token = resLogin.body.token;
-    const workout = { day: randomDay(), month: 2, year: 2026 };
+    const workout = { day: randomDay(), month: currentMonth, year: currentYear };
     await request(baseURL)
       .post("/api/workouts/calendar")
       .set("Authorization", `Bearer ${token}`)
@@ -103,7 +108,7 @@ describe("UR-2: Set workouts in the calendar", function () {
       .send(user2);
     const token1 = resLogin1.body.token;
     const token2 = resLogin2.body.token;
-    const workout = { day: randomDay(), month: 2, year: 2026 };
+    const workout = { day: randomDay(), month: currentMonth, year: currentYear };
     await request(baseURL)
       .post("/api/workouts/calendar")
       .set("Authorization", `Bearer ${token2}`)

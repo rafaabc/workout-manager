@@ -5,6 +5,11 @@ const baseURL = process.env.BASE_URL;
 
 import { randomUsername, validPassword, randomDay } from '../testUtils.js';
 
+// use current date to avoid month/year hardcoding
+const now = new Date();
+const currentMonth = now.getMonth() + 1;
+const currentYear = now.getFullYear();
+
 describe('UR-3: Metrics for Planned vs. Actual Workouts', function () {
   it('1 | Set a valid annual workout goal.', async function () {
     const user = { username: randomUsername('met1'), password: validPassword() };
@@ -42,7 +47,7 @@ describe('UR-3: Metrics for Planned vs. Actual Workouts', function () {
       .post('/api/metrics/goal')
       .set('Authorization', `Bearer ${token}`)
       .send({ goal: 200 });
-    const workout = { day: randomDay(), month: 2, year: 2026 };
+    const workout = { day: randomDay(), month: currentMonth, year: currentYear };
     await request(baseURL)
       .post('/api/workouts/calendar')
       .set('Authorization', `Bearer ${token}`)
@@ -65,7 +70,7 @@ describe('UR-3: Metrics for Planned vs. Actual Workouts', function () {
       .post('/api/metrics/goal')
       .set('Authorization', `Bearer ${token}`)
       .send({ goal: 200 });
-    const workout = { day: randomDay(), month: 2, year: 2026 };
+    const workout = { day: randomDay(), month: currentMonth, year: currentYear };
     await request(baseURL)
       .post('/api/workouts/calendar')
       .set('Authorization', `Bearer ${token}`)
@@ -87,7 +92,7 @@ describe('UR-3: Metrics for Planned vs. Actual Workouts', function () {
       .post('/api/metrics/goal')
       .set('Authorization', `Bearer ${token}`)
       .send({ goal: 200 });
-    const workout = { day: randomDay(), month: 2, year: 2026 };
+    const workout = { day: randomDay(), month: currentMonth, year: currentYear };
     await request(baseURL)
       .post('/api/workouts/calendar')
       .set('Authorization', `Bearer ${token}`)
@@ -97,7 +102,9 @@ describe('UR-3: Metrics for Planned vs. Actual Workouts', function () {
       .set('Authorization', `Bearer ${token}`);
     expect(res.status).to.equal(200);
     expect(res.body).to.have.property('percentage');
-    expect(res.body.percentage).to.equal(Math.floor((1/100)*100));
+    // percentage = round((totalYear/goal)*100)
+    const expectedPercent = Math.round((1 / 200) * 100);
+    expect(res.body.percentage).to.equal(expectedPercent);
   });
 
   it('6 | Update metrics when setting a workout', async function () {
@@ -109,8 +116,8 @@ describe('UR-3: Metrics for Planned vs. Actual Workouts', function () {
       .post('/api/metrics/goal')
       .set('Authorization', `Bearer ${token}`)
       .send({ goal: 100 });
-    const workout1 = { day: randomDay(), month: 2, year: 2026 };
-    const workout2 = { day: workout1.day === 28 ? 27 : workout1.day + 1, month: 2, year: 2026 };
+    const workout1 = { day: randomDay(), month: currentMonth, year: currentYear };
+    const workout2 = { day: workout1.day === 28 ? 27 : workout1.day + 1, month: currentMonth, year: currentYear };
     await request(baseURL)
       .post('/api/workouts/calendar')
       .set('Authorization', `Bearer ${token}`)
@@ -125,7 +132,8 @@ describe('UR-3: Metrics for Planned vs. Actual Workouts', function () {
     expect(res.status).to.equal(200);
     expect(res.body.totalMonth).to.equal(2);
     expect(res.body.totalYear).to.equal(2);
-    expect(res.body.percentage).to.equal(Math.floor((2/100)*100));
+    const expectedPerc2 = Math.round((2 / 100) * 100);
+    expect(res.body.percentage).to.equal(expectedPerc2);
   });
 
   it('7 | Update metrics when unsetting a workout', async function () {
@@ -137,8 +145,8 @@ describe('UR-3: Metrics for Planned vs. Actual Workouts', function () {
       .post('/api/metrics/goal')
       .set('Authorization', `Bearer ${token}`)
       .send({ goal: 200 });
-    const workout1 = { day: randomDay(), month: 2, year: 2026 };
-    const workout2 = { day: workout1.day === 28 ? 27 : workout1.day + 1, month: 2, year: 2026 };
+    const workout1 = { day: randomDay(), month: currentMonth, year: currentYear };
+    const workout2 = { day: workout1.day === 28 ? 27 : workout1.day + 1, month: currentMonth, year: currentYear };
     await request(baseURL)
       .post('/api/workouts/calendar')
       .set('Authorization', `Bearer ${token}`)
@@ -157,7 +165,8 @@ describe('UR-3: Metrics for Planned vs. Actual Workouts', function () {
     expect(res.status).to.equal(200);
     expect(res.body.totalMonth).to.equal(1);
     expect(res.body.totalYear).to.equal(1);
-    expect(res.body.percentage).to.equal(Math.floor((1/100)*100));
+    const expectedPerc3 = Math.round((1 / 200) * 100);
+    expect(res.body.percentage).to.equal(expectedPerc3);
   });
 
   it('8 | Display metrics only for authenticated users', async function () {
