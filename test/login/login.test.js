@@ -20,7 +20,8 @@ describe('UR-1: User Register and Login', function () {
     const res = await request(baseURL)
       .post('/api/users/register')
       .send(validUser);
-    expect(res.status).to.equal(400);
+    // duplicate registration should result in HTTP 409 Conflict
+    expect(res.status).to.equal(409);
   });
 
   it('3 | Register user with invalid password', async function () {

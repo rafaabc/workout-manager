@@ -6,7 +6,13 @@ export function register(req, res) {
     const user = userService.register(username, password);
     res.status(201).json(user);
   } catch (err) {
-    res.status(400).json({ error: err.message });
+    // Return 409 Conflict if username already exists
+    if (err.message.includes('already registered') || err.message.includes('already exists')) {
+      res.status(409).json({ error: err.message });
+    } else {
+      // Return 400 Bad Request for other validation errors
+      res.status(400).json({ error: err.message });
+    }
   }
 }
 
