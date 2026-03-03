@@ -14,7 +14,7 @@
     "lint": "eslint . --ext .js --max-warnings 0",
     "lint:fix": "eslint . --ext .js --fix",
     "format": "prettier --write src/**/*.js frontend/src/**/*.{js,css,html} test/**/*.js",
-    "audit": "npm audit --audit-level=moderate",
+    "audit": "npm audit --audit-level=critical",
     "prepare": "husky install",
     "k6:register": "k6 run performance/k6/login/register_user_performance.test.js",
     "k6:register:html": "k6 run --out html=performance/k6/login/register_user_performance.html performance/k6/login/register_user_performance.test.js"
