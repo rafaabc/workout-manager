@@ -21,6 +21,10 @@ class Header {
     `;
 
     const container = document.getElementById(this.container);
+    if (!container) {
+      console.error(`Header: container '#${this.container}' not found in DOM`);
+      return;
+    }
     container.innerHTML = headerHTML;
 
     // Add event listener for logout

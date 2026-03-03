@@ -61,6 +61,10 @@ class Metrics {
    */
   render() {
     const container = document.getElementById(this.container);
+    if (!container) {
+      console.error(`Metrics: container '#${this.container}' not found in DOM`);
+      return;
+    }
     container.innerHTML = '';
 
     if (!this.metrics) {
@@ -197,6 +201,10 @@ class Metrics {
    */
   showError(message) {
     const container = document.getElementById(this.container);
+    if (!container) {
+      console.error(`Metrics showError: container '#${this.container}' not found`, message);
+      return;
+    }
     const errorDiv = document.createElement('div');
     errorDiv.className = 'error-message';
     errorDiv.textContent = message;
