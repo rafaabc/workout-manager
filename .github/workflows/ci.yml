@@ -1,8 +1,5 @@
 name: CI - API Tests
 
-env:
-  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
 on:
   pull_request:
     branches:
@@ -58,6 +55,3 @@ jobs:
 
       - name: Run tests
         run: npm test
-
-      - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v2

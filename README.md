@@ -76,7 +76,6 @@ This project uses several tools to maintain code quality:
 - **ESLint** – Static analysis with security rules (`eslint.config.js`)
 - **Prettier** – Automatic code formatting (`.prettierrc`)
 - **Husky + lint-staged** – Git hooks to lint & format before commits (`.husky/`)
-- **SonarCloud** – Continuous code quality metrics (`sonar-project.properties`)
 - **npm audit** – Dependency vulnerability scanning
 
 GitHub Actions pipeline (`.github/workflows/ci.yml`) runs all checks automatically on push/PR.
