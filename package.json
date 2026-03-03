@@ -34,8 +34,8 @@
     "eslint-plugin-security": "^1.4.0",
     "globals": "^17.4.0",
     "husky": "^8.0.0",
-    "lint-staged": "^14.0.0",
-    "mocha": "^11.7.5",
+    "lint-staged": "^15.2.4",
+    "mocha": "^11.1.0",
     "mochawesome": "^7.1.4",
     "prettier": "^3.0.0",
     "supertest": "^7.2.2"
