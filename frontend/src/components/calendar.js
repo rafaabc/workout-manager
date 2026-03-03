@@ -25,7 +25,7 @@ class Calendar {
       }
 
       // Normalize numeric fields so comparisons work reliably
-      this.workouts = workouts.map((w) => ({
+      this.workouts = workouts.map(w => ({
         day: Number(w.day),
         month: Number(w.month),
         year: Number(w.year),
@@ -45,7 +45,7 @@ class Calendar {
    */
   hasWorkout(day) {
     const d = Number(day);
-    return this.workouts.some((w) => w.day === d);
+    return this.workouts.some(w => w.day === d);
   }
 
   /**

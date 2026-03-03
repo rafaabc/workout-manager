@@ -2,7 +2,11 @@ import jwt from 'jsonwebtoken';
 const SECRET = 'supersecretkey';
 
 export default function (req, res, next) {
-  if (req.path.startsWith('/api/users') || req.path.startsWith('/api/login') || req.path.startsWith('/api-docs')) {
+  if (
+    req.path.startsWith('/api/users') ||
+    req.path.startsWith('/api/login') ||
+    req.path.startsWith('/api-docs')
+  ) {
     return next();
   }
   const authHeader = req.headers['authorization'];
@@ -14,4 +18,4 @@ export default function (req, res, next) {
     req.user = user;
     next();
   });
-};
+}

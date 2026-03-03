@@ -2,35 +2,52 @@ name: CI - API Tests
 
 on:
   pull_request:
-    branches: [main]
+    branches:
+      - main
   push:
-    branches: [main]
+    branches:
+      - main
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Code Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Install Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
           node-version: '20.x'
+          cache: npm
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
+
+      - name: Run lint
+        run: npm run lint
+
+      - name: Format check
+        run: npm run format -- --check
+
+      - name: Audit dependencies
+        run: npm run audit
 
       - name: Run API
         run: npm start &
 
-      - name: Wait API start up
+      - name: Wait API startup
         run: |
           for i in {1..20}; do
             if nc -z localhost 3000; then
-              echo "API está de pé"; break;
+              echo "API is running"
+              break
             fi
-            echo "Awaiting API..."; sleep 2;
+            echo "Waiting for API..."
+            sleep 2
           done
 
       - name: Define BASE_URL for tests

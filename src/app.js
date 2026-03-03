@@ -22,11 +22,12 @@ app.use(authMiddleware);
 app.use('/api/workouts', workoutRoutes);
 app.use('/api/metrics', metricsRoutes);
 
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   res.status(err.status || 500).json({ error: err.message });
 });
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
   console.log(`Server running on port ${PORT}`);
 });

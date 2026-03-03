@@ -55,14 +55,30 @@ This project is composed of a REST API backend and a browser-based frontend clie
    ```bash
    npm install -g k6
    ```
-2. Start the API:
+2. Run quality checks (lint, format, audit):
+   ```bash
+   npm run lint        # static analysis with ESLint + security rules
+   npm run lint:fix    # auto-fix ESLint issues
+   npm run format      # auto-format code with Prettier
+   npm run audit       # check dependency vulnerabilities
+   ```
+3. Start the API:
    ```bash
    npm start    # or `node src/app.js`
    ```
-3. Access the documentation:
+4. Access the documentation:
    ```
    http://localhost:3000/api-docs
    ```
+
+### Code Quality Tools
+This project uses several tools to maintain code quality:
+- **ESLint** – Static analysis with security rules (`eslint.config.js`)
+- **Prettier** – Automatic code formatting (`.prettierrc`)
+- **Husky + lint-staged** – Git hooks to lint & format before commits (`.husky/`)
+- **npm audit** – Dependency vulnerability scanning
+
+GitHub Actions pipeline (`.github/workflows/ci.yml`) runs all checks automatically on push/PR.
 
 ## Main Endpoints
 - `POST /api/users/register` — User registration

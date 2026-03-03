@@ -17,16 +17,14 @@ describe('UR-3: Metrics for Planned vs. Actual Workouts', function () {
     const resLogin = await request(baseURL).post('/api/users/login').send(user);
     const token = resLogin.body.token;
 
-    const res = await request(baseURL)
-      .get('/api/metrics')
-      .set('Authorization', `Bearer ${token}`);
+    const res = await request(baseURL).get('/api/metrics').set('Authorization', `Bearer ${token}`);
 
     expect(res.status).to.equal(200);
     expect(res.body).to.have.property('goal');
     expect(res.body.goal).to.equal(0);
     expect(res.body).to.have.property('monthlyData');
     expect(res.body.monthlyData).to.be.an('array').with.lengthOf(12);
-    res.body.monthlyData.forEach((m) => expect(m.totalWorkouts).to.equal(0));
+    res.body.monthlyData.forEach(m => expect(m.totalWorkouts).to.equal(0));
   });
 
   it('1 | Set a valid annual workout goal.', async function () {
@@ -71,9 +69,7 @@ describe('UR-3: Metrics for Planned vs. Actual Workouts', function () {
       .post('/api/workouts/calendar')
       .set('Authorization', `Bearer ${token}`)
       .send(workout);
-    const res = await request(baseURL)
-      .get('/api/metrics')
-      .set('Authorization', `Bearer ${token}`);
+    const res = await request(baseURL).get('/api/metrics').set('Authorization', `Bearer ${token}`);
     expect(res.status).to.equal(200);
     expect(res.body).to.have.property('totalMonth');
     expect(res.body.totalMonth).to.equal(1);
@@ -96,9 +92,7 @@ describe('UR-3: Metrics for Planned vs. Actual Workouts', function () {
       .post('/api/workouts/calendar')
       .set('Authorization', `Bearer ${token}`)
       .send(workout);
-    const res = await request(baseURL)
-      .get('/api/metrics')
-      .set('Authorization', `Bearer ${token}`);
+    const res = await request(baseURL).get('/api/metrics').set('Authorization', `Bearer ${token}`);
     expect(res.status).to.equal(200);
     expect(res.body).to.have.property('totalYear');
     expect(res.body.totalYear).to.equal(1);
@@ -118,9 +112,7 @@ describe('UR-3: Metrics for Planned vs. Actual Workouts', function () {
       .post('/api/workouts/calendar')
       .set('Authorization', `Bearer ${token}`)
       .send(workout);
-    const res = await request(baseURL)
-      .get('/api/metrics')
-      .set('Authorization', `Bearer ${token}`);
+    const res = await request(baseURL).get('/api/metrics').set('Authorization', `Bearer ${token}`);
     expect(res.status).to.equal(200);
     expect(res.body).to.have.property('percentage');
     // percentage = round((totalYear/goal)*100)
@@ -138,7 +130,11 @@ describe('UR-3: Metrics for Planned vs. Actual Workouts', function () {
       .set('Authorization', `Bearer ${token}`)
       .send({ goal: 100 });
     const workout1 = { day: randomDay(), month: currentMonth, year: currentYear };
-    const workout2 = { day: workout1.day === 28 ? 27 : workout1.day + 1, month: currentMonth, year: currentYear };
+    const workout2 = {
+      day: workout1.day === 28 ? 27 : workout1.day + 1,
+      month: currentMonth,
+      year: currentYear,
+    };
     await request(baseURL)
       .post('/api/workouts/calendar')
       .set('Authorization', `Bearer ${token}`)
@@ -147,9 +143,7 @@ describe('UR-3: Metrics for Planned vs. Actual Workouts', function () {
       .post('/api/workouts/calendar')
       .set('Authorization', `Bearer ${token}`)
       .send(workout2);
-    const res = await request(baseURL)
-      .get('/api/metrics')
-      .set('Authorization', `Bearer ${token}`);
+    const res = await request(baseURL).get('/api/metrics').set('Authorization', `Bearer ${token}`);
     expect(res.status).to.equal(200);
     expect(res.body.totalMonth).to.equal(2);
     expect(res.body.totalYear).to.equal(2);
@@ -168,7 +162,11 @@ describe('UR-3: Metrics for Planned vs. Actual Workouts', function () {
       .set('Authorization', `Bearer ${token}`)
       .send({ goal: 200 });
     const workout1 = { day: randomDay(), month: currentMonth, year: currentYear };
-    const workout2 = { day: workout1.day === 28 ? 27 : workout1.day + 1, month: currentMonth, year: currentYear };
+    const workout2 = {
+      day: workout1.day === 28 ? 27 : workout1.day + 1,
+      month: currentMonth,
+      year: currentYear,
+    };
     await request(baseURL)
       .post('/api/workouts/calendar')
       .set('Authorization', `Bearer ${token}`)
@@ -181,9 +179,7 @@ describe('UR-3: Metrics for Planned vs. Actual Workouts', function () {
       .delete('/api/workouts/calendar')
       .set('Authorization', `Bearer ${token}`)
       .send(workout2);
-    const res = await request(baseURL)
-      .get('/api/metrics')
-      .set('Authorization', `Bearer ${token}`);
+    const res = await request(baseURL).get('/api/metrics').set('Authorization', `Bearer ${token}`);
     expect(res.status).to.equal(200);
     expect(res.body.totalMonth).to.equal(1);
     expect(res.body.totalYear).to.equal(1);
@@ -192,8 +188,7 @@ describe('UR-3: Metrics for Planned vs. Actual Workouts', function () {
   });
 
   it('8 | Display metrics only for authenticated users', async function () {
-    const res = await request(baseURL)
-      .get('/api/metrics');
+    const res = await request(baseURL).get('/api/metrics');
     expect(res.status).to.equal(401);
   });
 });
