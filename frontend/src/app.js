@@ -50,7 +50,13 @@ class App {
     // Load and render the requested page
     try {
       const response = await fetch(`src/pages/${page}.html`);
+      if (!response.ok) {
+        throw new Error(`Failed to load page: ${response.status} ${response.statusText}`);
+      }
       const html = await response.text();
+      if (!html.trim()) {
+        throw new Error(`Page template is empty: ${page}`);
+      }
       app.innerHTML = html;
 
       // Initialize page-specific logic

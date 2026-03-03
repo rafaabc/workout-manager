@@ -1,4 +1,5 @@
 import express from 'express';
+import path from 'path';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
@@ -9,8 +10,13 @@ import workoutRoutes from './routes/workoutRoutes.js';
 import metricsRoutes from './routes/metricsRoutes.js';
 
 const app = express();
+const __dirname = path.dirname(new URL(import.meta.url).pathname);
+
 app.use(cors());
 app.use(bodyParser.json());
+
+// Serve static files from frontend directory
+app.use(express.static(path.join(__dirname, '../frontend')));
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
@@ -24,6 +30,11 @@ app.use('/api/metrics', metricsRoutes);
 
 app.use((err, req, res) => {
   res.status(err.status || 500).json({ error: err.message });
+});
+
+// Fallback route to serve index.html for SPA routing
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
 const PORT = process.env.PORT || 3000;
