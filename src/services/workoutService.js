@@ -7,7 +7,8 @@ export function getCalendar(username, month, year) {
 
 export function setWorkout(username, day, month, year) {
   if (!workouts[username]) workouts[username] = [];
-  if (workouts[username].some(t => t.day == day && t.month == month && t.year == year)) throw new Error('Treino já marcado para este day');
+  if (workouts[username].some(t => t.day == day && t.month == month && t.year == year))
+    throw new Error('Treino já marcado para este day');
   workouts[username].push({ day, month, year });
 }
 

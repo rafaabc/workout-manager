@@ -94,7 +94,7 @@ class App {
     const form = document.getElementById('loginForm');
     const errorDiv = document.getElementById('errorMessage');
 
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async e => {
       e.preventDefault();
 
       const username = document.getElementById('username').value;
@@ -138,7 +138,7 @@ class App {
     const form = document.getElementById('registerForm');
     const errorDiv = document.getElementById('errorMessage');
 
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', async e => {
       e.preventDefault();
 
       const username = document.getElementById('username').value;

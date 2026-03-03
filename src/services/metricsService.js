@@ -13,9 +13,7 @@ export function getMetrics(username) {
   // build an array with totals for each month (1–12)
   const monthlyData = Array.from({ length: 12 }, (_, idx) => {
     const month = idx + 1;
-    const total = workoutsUser.filter(
-      (t) => t.year == currentYear && t.month == month
-    ).length;
+    const total = workoutsUser.filter(t => t.year == currentYear && t.month == month).length;
     return { month, totalWorkouts: total };
   });
 

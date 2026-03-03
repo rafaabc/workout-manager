@@ -11,6 +11,11 @@
     "server": "cd frontend && http-server",
     "test": "mocha --config ./test/mocha.config.json",
     "test:report": "mocha --config ./test/mocha.config.json --reporter mochawesome --reporter-options reportDir=mochawesome-report,reportFilename=index,quiet=true,overwrite=true,html=true,json=false",
+    "lint": "eslint . --ext .js --max-warnings 0",
+    "lint:fix": "eslint . --ext .js --fix",
+    "format": "prettier --write src/**/*.js frontend/src/**/*.{js,css,html} test/**/*.js",
+    "audit": "npm audit --audit-level=moderate",
+    "prepare": "husky install",
     "k6:register": "k6 run performance/k6/login/register_user_performance.test.js",
     "k6:register:html": "k6 run --out html=performance/k6/login/register_user_performance.html performance/k6/login/register_user_performance.test.js"
   },
@@ -22,10 +27,24 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "chai": "^6.2.2",
     "dotenv": "^17.2.4",
+    "eslint": "^10.0.2",
+    "eslint-plugin-security": "^1.4.0",
+    "globals": "^17.4.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^14.0.0",
     "mocha": "^11.7.5",
     "mochawesome": "^7.1.4",
+    "prettier": "^3.0.0",
     "supertest": "^7.2.2"
+  },
+  "lint-staged": {
+    "*.{js,jsx}": [
+      "npm run lint:fix",
+      "npm run format",
+      "git add"
+    ]
   }
 }

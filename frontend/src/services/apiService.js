@@ -31,13 +31,13 @@ class ApiService {
       if (!response.ok) {
         // Extract error message - try multiple fields
         const errorMessage = data?.error || data?.message || `HTTP ${response.status}`;
-        
+
         console.error('API Error Response:', {
           status: response.status,
           message: errorMessage,
           data: data,
         });
-        
+
         const error = new Error(errorMessage);
         error.status = response.status;
         error.data = data;
@@ -50,7 +50,7 @@ class ApiService {
       if (e.status) {
         throw e;
       }
-      
+
       // Handle JSON parsing or other errors
       console.error('Response parsing error:', e);
       const error = new Error('Failed to parse API response');
