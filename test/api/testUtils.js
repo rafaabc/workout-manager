@@ -1,9 +1,11 @@
+import { randomInt, randomBytes } from 'node:crypto';
+
 export function randomUsername(prefix = 'user') {
-  return `${prefix}_${Math.random().toString(36).substring(2, 10)}`;
+  return `${prefix}_${randomBytes(4).toString('hex')}`;
 }
 
 export function validPassword() {
-  return 'Password' + Math.floor(Math.random() * 100000);
+  return 'Password' + randomInt(100000);
 }
 
 export function invalidPassword() {
@@ -11,5 +13,5 @@ export function invalidPassword() {
 }
 
 export function randomDay() {
-  return Math.floor(Math.random() * 27) + 1; // 1 a 28
+  return randomInt(1, 28); // 1 to 27
 }

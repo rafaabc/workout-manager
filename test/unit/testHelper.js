@@ -32,16 +32,18 @@ export function seedWorkout(username, day, month, year) {
   workouts[username].push({ day, month, year });
 }
 
+import { randomInt, randomBytes } from 'node:crypto';
+
 /**
  * Generates a unique username for test isolation.
  */
 export function uniqueUsername(prefix = 'user') {
-  return `${prefix}_${Math.random().toString(36).substring(2, 10)}`;
+  return `${prefix}_${randomBytes(4).toString('hex')}`;
 }
 
 /**
  * Returns a valid password that passes business rules (8+ chars, letters + numbers).
  */
 export function validPassword() {
-  return 'Test' + Math.floor(Math.random() * 100000) + 'Aa';
+  return 'Test' + randomInt(100000) + 'Aa';
 }
