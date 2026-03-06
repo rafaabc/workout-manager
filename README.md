@@ -1,6 +1,5 @@
-[![Code Quality](https://github.com/rafaabc/gestao-treinos-academia/actions/workflows/ci.yml/badge.svg?event=push)](https://github.com/rafaabc/gestao-treinos-academia/actions/workflows/ci.yml)
-[![Unit Tests](https://github.com/rafaabc/gestao-treinos-academia/actions/workflows/ci.yml/badge.svg?event=push)](https://github.com/rafaabc/gestao-treinos-academia/actions/workflows/ci.yml)
-[![API Tests](https://github.com/rafaabc/gestao-treinos-academia/actions/workflows/ci.yml/badge.svg?event=push)](https://github.com/rafaabc/gestao-treinos-academia/actions/workflows/ci.yml)
+[![CI](https://github.com/rafaabc/workout-manager/actions/workflows/ci.yml/badge.svg)](https://github.com/rafaabc/workout-manager/actions/workflows/ci.yml)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=rafaabc_workout-manager&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=rafaabc_workout-manager)
 
 # Workout Manager
 
