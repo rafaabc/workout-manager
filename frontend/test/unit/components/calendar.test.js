@@ -1,6 +1,5 @@
 import Calendar from '../../../src/components/calendar.js';
 import apiService from '../../../src/services/apiService.js';
-import { MONTHS } from '../../../src/utils/constants.js';
 
 // Mock apiService
 jest.mock('../../../src/services/apiService.js', () => ({

@@ -38,7 +38,7 @@ class Header {
       console.error('Logout error:', error);
     } finally {
       AuthService.clearAuth();
-      window.location.href = 'index.html?page=login';
+      globalThis.location.href = 'index.html?page=login';
     }
   }
 }

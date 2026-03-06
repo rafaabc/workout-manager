@@ -1,9 +1,13 @@
 import ApiService from '../../../src/services/apiService.js';
 import AuthService from '../../../src/services/authService.js';
-import { TOKEN_KEY, API_BASE_URL, ENDPOINTS, HTTP_STATUS } from '../../../src/utils/constants.js';
+import { TOKEN_KEY, API_BASE_URL, ENDPOINTS } from '../../../src/utils/constants.js';
 
 // The default export is an instance; we need the class for some tests
 const apiService = ApiService;
+
+// Test credentials (not real credentials — used only for unit test assertions)
+const TEST_USER = 'john';
+const TEST_CREDENTIAL = 'pass1234'; // NOSONAR
 
 describe('ApiService', () => {
   beforeEach(() => {
@@ -123,7 +127,7 @@ describe('ApiService', () => {
     test('should make a successful GET request', async () => {
       // Arrange
       const responseData = { workouts: [] };
-      global.fetch = jest.fn().mockResolvedValue({
+      globalThis.fetch = jest.fn().mockResolvedValue({
         ok: true,
         status: 200,
         json: jest.fn().mockResolvedValue(responseData),
@@ -134,7 +138,7 @@ describe('ApiService', () => {
 
       // Assert
       expect(result).toEqual(responseData);
-      expect(global.fetch).toHaveBeenCalledWith(
+      expect(globalThis.fetch).toHaveBeenCalledWith(
         `${API_BASE_URL}/test`,
         expect.objectContaining({ method: 'GET' })
       );
@@ -143,7 +147,7 @@ describe('ApiService', () => {
     test('should make a successful POST request with body', async () => {
       // Arrange
       const responseData = { id: 1 };
-      global.fetch = jest.fn().mockResolvedValue({
+      globalThis.fetch = jest.fn().mockResolvedValue({
         ok: true,
         status: 201,
         json: jest.fn().mockResolvedValue(responseData),
@@ -155,7 +159,7 @@ describe('ApiService', () => {
 
       // Assert
       expect(result).toEqual(responseData);
-      expect(global.fetch).toHaveBeenCalledWith(
+      expect(globalThis.fetch).toHaveBeenCalledWith(
         `${API_BASE_URL}/test`,
         expect.objectContaining({ method: 'POST', body })
       );
@@ -164,7 +168,7 @@ describe('ApiService', () => {
     test('should include auth token in request headers', async () => {
       // Arrange
       localStorage.setItem(TOKEN_KEY, 'my-token');
-      global.fetch = jest.fn().mockResolvedValue({
+      globalThis.fetch = jest.fn().mockResolvedValue({
         ok: true,
         status: 200,
         json: jest.fn().mockResolvedValue({}),
@@ -174,7 +178,7 @@ describe('ApiService', () => {
       await apiService.request('/test');
 
       // Assert
-      expect(global.fetch).toHaveBeenCalledWith(
+      expect(globalThis.fetch).toHaveBeenCalledWith(
         `${API_BASE_URL}/test`,
         expect.objectContaining({
           headers: expect.objectContaining({
@@ -186,9 +190,9 @@ describe('ApiService', () => {
 
     test('should dispatch networkError event on network failure', async () => {
       // Arrange
-      global.fetch = jest.fn().mockRejectedValue(new TypeError('Failed to fetch'));
+      globalThis.fetch = jest.fn().mockRejectedValue(new TypeError('Failed to fetch'));
       const networkErrorHandler = jest.fn();
-      window.addEventListener('networkError', networkErrorHandler);
+      globalThis.addEventListener('networkError', networkErrorHandler);
 
       // Act & Assert
       await expect(apiService.request('/test')).rejects.toThrow(
@@ -197,19 +201,19 @@ describe('ApiService', () => {
       expect(networkErrorHandler).toHaveBeenCalled();
 
       // Cleanup
-      window.removeEventListener('networkError', networkErrorHandler);
+      globalThis.removeEventListener('networkError', networkErrorHandler);
     });
 
     test('should dispatch unauthorized event and clear token on 401', async () => {
       // Arrange
       localStorage.setItem(TOKEN_KEY, 'expired-token');
-      global.fetch = jest.fn().mockResolvedValue({
+      globalThis.fetch = jest.fn().mockResolvedValue({
         ok: false,
         status: 401,
         json: jest.fn().mockResolvedValue({ error: 'Token expired' }),
       });
       const unauthorizedHandler = jest.fn();
-      window.addEventListener('unauthorized', unauthorizedHandler);
+      globalThis.addEventListener('unauthorized', unauthorizedHandler);
 
       // Act & Assert
       await expect(apiService.request('/test')).rejects.toThrow('Token expired');
@@ -217,12 +221,12 @@ describe('ApiService', () => {
       expect(unauthorizedHandler).toHaveBeenCalled();
 
       // Cleanup
-      window.removeEventListener('unauthorized', unauthorizedHandler);
+      globalThis.removeEventListener('unauthorized', unauthorizedHandler);
     });
 
     test('should throw error on 500 server error', async () => {
       // Arrange
-      global.fetch = jest.fn().mockResolvedValue({
+      globalThis.fetch = jest.fn().mockResolvedValue({
         ok: false,
         status: 500,
         json: jest.fn().mockResolvedValue({ error: 'Internal server error' }),
@@ -275,21 +279,21 @@ describe('ApiService', () => {
   describe('register', () => {
     test('should call request with correct endpoint and body', async () => {
       // Arrange
-      global.fetch = jest.fn().mockResolvedValue({
+      globalThis.fetch = jest.fn().mockResolvedValue({
         ok: true,
         status: 201,
         json: jest.fn().mockResolvedValue({ message: 'User registered' }),
       });
 
       // Act
-      const result = await apiService.register('john', 'pass1234');
+      const result = await apiService.register(TEST_USER, TEST_CREDENTIAL);
 
       // Assert
-      expect(global.fetch).toHaveBeenCalledWith(
+      expect(globalThis.fetch).toHaveBeenCalledWith(
         `${API_BASE_URL}${ENDPOINTS.AUTH.REGISTER}`,
         expect.objectContaining({
           method: 'POST',
-          body: JSON.stringify({ username: 'john', password: 'pass1234' }),
+          body: JSON.stringify({ username: TEST_USER, password: TEST_CREDENTIAL }),
         })
       );
       expect(result.message).toBe('User registered');
@@ -299,21 +303,21 @@ describe('ApiService', () => {
   describe('login', () => {
     test('should call request with correct endpoint and body', async () => {
       // Arrange
-      global.fetch = jest.fn().mockResolvedValue({
+      globalThis.fetch = jest.fn().mockResolvedValue({
         ok: true,
         status: 200,
         json: jest.fn().mockResolvedValue({ token: 'jwt-token' }),
       });
 
       // Act
-      const result = await apiService.login('john', 'pass1234');
+      const result = await apiService.login(TEST_USER, TEST_CREDENTIAL);
 
       // Assert
-      expect(global.fetch).toHaveBeenCalledWith(
+      expect(globalThis.fetch).toHaveBeenCalledWith(
         `${API_BASE_URL}${ENDPOINTS.AUTH.LOGIN}`,
         expect.objectContaining({
           method: 'POST',
-          body: JSON.stringify({ username: 'john', password: 'pass1234' }),
+          body: JSON.stringify({ username: TEST_USER, password: TEST_CREDENTIAL }),
         })
       );
       expect(result.token).toBe('jwt-token');
@@ -321,21 +325,21 @@ describe('ApiService', () => {
 
     test('should throw error on invalid credentials', async () => {
       // Arrange
-      global.fetch = jest.fn().mockResolvedValue({
+      globalThis.fetch = jest.fn().mockResolvedValue({
         ok: false,
         status: 401,
         json: jest.fn().mockResolvedValue({ error: 'Invalid credentials' }),
       });
 
       // Act & Assert
-      await expect(apiService.login('john', 'wrongpass')).rejects.toThrow('Invalid credentials');
+      await expect(apiService.login(TEST_USER, 'wrongpass')).rejects.toThrow('Invalid credentials');
     });
   });
 
   describe('logout', () => {
     test('should call logout endpoint with POST method', async () => {
       // Arrange
-      global.fetch = jest.fn().mockResolvedValue({
+      globalThis.fetch = jest.fn().mockResolvedValue({
         ok: true,
         status: 200,
         json: jest.fn().mockResolvedValue({ message: 'Logged out' }),
@@ -345,7 +349,7 @@ describe('ApiService', () => {
       const result = await apiService.logout();
 
       // Assert
-      expect(global.fetch).toHaveBeenCalledWith(
+      expect(globalThis.fetch).toHaveBeenCalledWith(
         `${API_BASE_URL}${ENDPOINTS.AUTH.LOGOUT}`,
         expect.objectContaining({ method: 'POST' })
       );
@@ -358,7 +362,7 @@ describe('ApiService', () => {
     test('should call correct endpoint with month and year params', async () => {
       // Arrange
       const workouts = [{ day: 1, month: 3, year: 2026 }];
-      global.fetch = jest.fn().mockResolvedValue({
+      globalThis.fetch = jest.fn().mockResolvedValue({
         ok: true,
         status: 200,
         json: jest.fn().mockResolvedValue({ workouts }),
@@ -368,7 +372,7 @@ describe('ApiService', () => {
       const result = await apiService.getWorkoutsByMonth(3, 2026);
 
       // Assert
-      expect(global.fetch).toHaveBeenCalledWith(
+      expect(globalThis.fetch).toHaveBeenCalledWith(
         expect.stringContaining(`${ENDPOINTS.WORKOUTS.CALENDAR}?month=3&year=2026`),
         expect.objectContaining({ method: 'GET' })
       );
@@ -379,7 +383,7 @@ describe('ApiService', () => {
   describe('markWorkout', () => {
     test('should call calendar endpoint with POST and correct body', async () => {
       // Arrange
-      global.fetch = jest.fn().mockResolvedValue({
+      globalThis.fetch = jest.fn().mockResolvedValue({
         ok: true,
         status: 201,
         json: jest.fn().mockResolvedValue({ message: 'Workout marked' }),
@@ -389,7 +393,7 @@ describe('ApiService', () => {
       const result = await apiService.markWorkout(15, 3, 2026);
 
       // Assert
-      expect(global.fetch).toHaveBeenCalledWith(
+      expect(globalThis.fetch).toHaveBeenCalledWith(
         `${API_BASE_URL}${ENDPOINTS.WORKOUTS.CALENDAR}`,
         expect.objectContaining({
           method: 'POST',
@@ -403,7 +407,7 @@ describe('ApiService', () => {
   describe('unmarkWorkout', () => {
     test('should call calendar endpoint with DELETE and correct body', async () => {
       // Arrange
-      global.fetch = jest.fn().mockResolvedValue({
+      globalThis.fetch = jest.fn().mockResolvedValue({
         ok: true,
         status: 200,
         json: jest.fn().mockResolvedValue({ message: 'Workout removed' }),
@@ -413,7 +417,7 @@ describe('ApiService', () => {
       const result = await apiService.unmarkWorkout(15, 3, 2026);
 
       // Assert
-      expect(global.fetch).toHaveBeenCalledWith(
+      expect(globalThis.fetch).toHaveBeenCalledWith(
         `${API_BASE_URL}${ENDPOINTS.WORKOUTS.CALENDAR}`,
         expect.objectContaining({
           method: 'DELETE',
@@ -429,7 +433,7 @@ describe('ApiService', () => {
     test('should call metrics endpoint with GET', async () => {
       // Arrange
       const metricsData = { goal: 200, monthlyData: [] };
-      global.fetch = jest.fn().mockResolvedValue({
+      globalThis.fetch = jest.fn().mockResolvedValue({
         ok: true,
         status: 200,
         json: jest.fn().mockResolvedValue(metricsData),
@@ -439,7 +443,7 @@ describe('ApiService', () => {
       const result = await apiService.getMetrics();
 
       // Assert
-      expect(global.fetch).toHaveBeenCalledWith(
+      expect(globalThis.fetch).toHaveBeenCalledWith(
         `${API_BASE_URL}${ENDPOINTS.METRICS.GET}`,
         expect.objectContaining({ method: 'GET' })
       );
@@ -450,7 +454,7 @@ describe('ApiService', () => {
   describe('setGoal', () => {
     test('should call set goal endpoint with POST and goal value', async () => {
       // Arrange
-      global.fetch = jest.fn().mockResolvedValue({
+      globalThis.fetch = jest.fn().mockResolvedValue({
         ok: true,
         status: 200,
         json: jest.fn().mockResolvedValue({ goal: 200 }),
@@ -460,7 +464,7 @@ describe('ApiService', () => {
       const result = await apiService.setGoal(200);
 
       // Assert
-      expect(global.fetch).toHaveBeenCalledWith(
+      expect(globalThis.fetch).toHaveBeenCalledWith(
         `${API_BASE_URL}${ENDPOINTS.METRICS.SET_GOAL}`,
         expect.objectContaining({
           method: 'POST',

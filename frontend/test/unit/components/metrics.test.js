@@ -1,6 +1,5 @@
 import Metrics from '../../../src/components/metrics.js';
 import apiService from '../../../src/services/apiService.js';
-import { MONTHS } from '../../../src/utils/constants.js';
 
 // Mock apiService
 jest.mock('../../../src/services/apiService.js', () => ({
@@ -59,7 +58,7 @@ describe('Metrics', () => {
     test('should return 0 when all months have zero workouts', () => {
       // Arrange
       metrics.metrics = {
-        monthlyData: Array(12).fill({ totalWorkouts: 0 }),
+        monthlyData: new Array(12).fill({ totalWorkouts: 0 }),
       };
 
       // Act
@@ -180,7 +179,7 @@ describe('Metrics', () => {
       // Arrange — 200 workouts out of 200 goal
       metrics.metrics = {
         goal: 200,
-        monthlyData: Array(12).fill({ totalWorkouts: 0 }),
+        monthlyData: new Array(12).fill({ totalWorkouts: 0 }),
       };
       // Override to make total = 200
       metrics.metrics.monthlyData = [
@@ -361,7 +360,7 @@ describe('Metrics', () => {
       // Arrange
       const metricsData = {
         goal: 200,
-        monthlyData: Array(12).fill({ totalWorkouts: 0 }),
+        monthlyData: new Array(12).fill({ totalWorkouts: 0 }),
       };
       apiService.getMetrics.mockResolvedValue(metricsData);
 
@@ -405,7 +404,7 @@ describe('Metrics', () => {
       // Arrange
       metrics.metrics = {
         goal: 200,
-        monthlyData: Array(12).fill({ totalWorkouts: 0 }),
+        monthlyData: new Array(12).fill({ totalWorkouts: 0 }),
       };
 
       // Act
@@ -434,7 +433,7 @@ describe('Metrics', () => {
       // Arrange
       metrics.metrics = {
         goal: 200,
-        monthlyData: Array(12).fill({ totalWorkouts: 0 }),
+        monthlyData: new Array(12).fill({ totalWorkouts: 0 }),
       };
 
       // Act
@@ -449,7 +448,7 @@ describe('Metrics', () => {
       // Arrange
       metrics.metrics = {
         goal: 200,
-        monthlyData: Array(12).fill({ totalWorkouts: 0 }),
+        monthlyData: new Array(12).fill({ totalWorkouts: 0 }),
       };
 
       // Act
@@ -465,7 +464,7 @@ describe('Metrics', () => {
       // Arrange
       metrics.metrics = {
         goal: 150,
-        monthlyData: Array(12).fill({ totalWorkouts: 0 }),
+        monthlyData: new Array(12).fill({ totalWorkouts: 0 }),
       };
 
       // Act
@@ -484,7 +483,7 @@ describe('Metrics', () => {
         monthlyData: [
           { totalWorkouts: 10 },
           { totalWorkouts: 20 },
-          ...Array(10).fill({ totalWorkouts: 0 }),
+          ...new Array(10).fill({ totalWorkouts: 0 }),
         ],
       };
 
@@ -500,7 +499,7 @@ describe('Metrics', () => {
       // Arrange
       metrics.metrics = {
         goal: 200,
-        monthlyData: Array(12).fill({ totalWorkouts: 0 }),
+        monthlyData: new Array(12).fill({ totalWorkouts: 0 }),
       };
 
       // Act
@@ -515,7 +514,7 @@ describe('Metrics', () => {
     test('should not crash when container does not exist', () => {
       // Arrange
       document.body.innerHTML = '';
-      metrics.metrics = { goal: 200, monthlyData: Array(12).fill({ totalWorkouts: 0 }) };
+      metrics.metrics = { goal: 200, monthlyData: new Array(12).fill({ totalWorkouts: 0 }) };
       jest.spyOn(console, 'error').mockImplementation(() => {});
 
       // Act & Assert
@@ -529,16 +528,16 @@ describe('Metrics', () => {
       // Arrange
       metrics.metrics = {
         goal: 200,
-        monthlyData: Array(12).fill({ totalWorkouts: 0 }),
+        monthlyData: new Array(12).fill({ totalWorkouts: 0 }),
       };
       metrics.render();
       document.getElementById('goalInput').value = '250';
       apiService.setGoal.mockResolvedValue({ goal: 250 });
       apiService.getMetrics.mockResolvedValue({
         goal: 250,
-        monthlyData: Array(12).fill({ totalWorkouts: 0 }),
+        monthlyData: new Array(12).fill({ totalWorkouts: 0 }),
       });
-      const dispatchSpy = jest.spyOn(window, 'dispatchEvent');
+      const dispatchSpy = jest.spyOn(globalThis, 'dispatchEvent');
 
       // Act
       await metrics.handleSaveGoal();
@@ -552,7 +551,7 @@ describe('Metrics', () => {
       // Arrange
       metrics.metrics = {
         goal: 200,
-        monthlyData: Array(12).fill({ totalWorkouts: 0 }),
+        monthlyData: new Array(12).fill({ totalWorkouts: 0 }),
       };
       metrics.render();
       document.getElementById('goalInput').value = '-5';
@@ -571,7 +570,7 @@ describe('Metrics', () => {
       // Arrange
       metrics.metrics = {
         goal: 200,
-        monthlyData: Array(12).fill({ totalWorkouts: 0 }),
+        monthlyData: new Array(12).fill({ totalWorkouts: 0 }),
       };
       metrics.render();
       document.getElementById('goalInput').value = 'abc';
@@ -589,7 +588,7 @@ describe('Metrics', () => {
       // Arrange
       metrics.metrics = {
         goal: 200,
-        monthlyData: Array(12).fill({ totalWorkouts: 0 }),
+        monthlyData: new Array(12).fill({ totalWorkouts: 0 }),
       };
       metrics.render();
       document.getElementById('goalInput').value = '300';
@@ -609,7 +608,7 @@ describe('Metrics', () => {
       // Arrange
       metrics.metrics = {
         goal: 200,
-        monthlyData: Array(12).fill({ totalWorkouts: 0 }),
+        monthlyData: new Array(12).fill({ totalWorkouts: 0 }),
       };
       metrics.render();
       document.getElementById('goalInput').value = '0';
@@ -652,7 +651,7 @@ describe('Metrics', () => {
       // Arrange
       const metricsData = {
         goal: 200,
-        monthlyData: Array(12).fill({ totalWorkouts: 0 }),
+        monthlyData: new Array(12).fill({ totalWorkouts: 0 }),
       };
       apiService.getMetrics.mockResolvedValue(metricsData);
 
@@ -674,7 +673,7 @@ describe('Metrics', () => {
         monthlyData: [
           { totalWorkouts: 25 },
           { totalWorkouts: 25 },
-          ...Array(10).fill({ totalWorkouts: 0 }),
+          ...new Array(10).fill({ totalWorkouts: 0 }),
         ],
       };
 
@@ -689,7 +688,7 @@ describe('Metrics', () => {
       // Arrange
       metrics.metrics = {
         goal: 200,
-        monthlyData: Array(12).fill({ totalWorkouts: 0 }),
+        monthlyData: new Array(12).fill({ totalWorkouts: 0 }),
       };
 
       // Act
@@ -703,7 +702,7 @@ describe('Metrics', () => {
       // Arrange — 300 workouts / 200 goal
       metrics.metrics = {
         goal: 200,
-        monthlyData: Array(12).fill({ totalWorkouts: 25 }),
+        monthlyData: new Array(12).fill({ totalWorkouts: 25 }),
       };
 
       // Act

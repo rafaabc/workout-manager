@@ -16,15 +16,15 @@ class App {
 
   async init() {
     // Listen for unauthorized events
-    window.addEventListener('unauthorized', () => this.handleUnauthorized());
+    globalThis.addEventListener('unauthorized', () => this.handleUnauthorized());
 
     // global network error handler will redirect to error page
-    window.addEventListener('networkError', () => {
-      window.location.href = 'index.html?page=error';
+    globalThis.addEventListener('networkError', () => {
+      globalThis.location.href = 'index.html?page=error';
     });
 
     // Get the page from URL parameters
-    const params = new URLSearchParams(window.location.search);
+    const params = new URLSearchParams(globalThis.location.search);
     const requestedPage = params.get('page');
 
     // Determine which page to show
@@ -83,7 +83,7 @@ class App {
             </div>
           `;
           document.getElementById('retryBtn').addEventListener('click', () => {
-            window.location.href = 'index.html?page=login';
+            globalThis.location.href = 'index.html?page=login';
           });
           break;
       }
@@ -117,7 +117,7 @@ class App {
         AuthService.saveToken(response.token, username);
 
         // Redirect to dashboard
-        window.location.href = 'index.html?page=dashboard';
+        globalThis.location.href = 'index.html?page=dashboard';
       } catch (error) {
         // Error message comes from the API response
         const errorMessage = error.message || 'Login failed. Please try again.';
@@ -215,7 +215,7 @@ class App {
   async initDashboardPage() {
     // Check authentication
     if (!AuthService.isAuthenticated()) {
-      window.location.href = 'index.html?page=login';
+      globalThis.location.href = 'index.html?page=login';
       return;
     }
 
@@ -232,7 +232,7 @@ class App {
     await this.metrics.loadMetrics();
 
     // Listen for metrics updates
-    window.addEventListener('metricsUpdated', () => {
+    globalThis.addEventListener('metricsUpdated', () => {
       this.onWorkoutChange();
     });
   }
@@ -251,7 +251,7 @@ class App {
    */
   handleUnauthorized() {
     AuthService.clearAuth();
-    window.location.href = 'index.html?page=login';
+    globalThis.location.href = 'index.html?page=login';
   }
 }
 

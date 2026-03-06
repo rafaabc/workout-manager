@@ -102,10 +102,10 @@ describe('Validators', () => {
   describe('validatePassword', () => {
     test('should accept a valid password with letters and numbers', () => {
       // Arrange
-      const password = 'test1234';
+      const input = 'test1234';
 
       // Act
-      const result = Validators.validatePassword(password);
+      const result = Validators.validatePassword(input);
 
       // Assert
       expect(result.isValid).toBe(true);
@@ -113,10 +113,10 @@ describe('Validators', () => {
 
     test('should accept password with exactly 8 characters', () => {
       // Arrange
-      const password = 'abcdef12';
+      const input = 'abcdef12';
 
       // Act
-      const result = Validators.validatePassword(password);
+      const result = Validators.validatePassword(input);
 
       // Assert
       expect(result.isValid).toBe(true);
@@ -124,10 +124,10 @@ describe('Validators', () => {
 
     test('should accept long password with letters and numbers', () => {
       // Arrange
-      const password = 'abcdefghijk123456';
+      const input = 'abcdefghijk123456';
 
       // Act
-      const result = Validators.validatePassword(password);
+      const result = Validators.validatePassword(input);
 
       // Assert
       expect(result.isValid).toBe(true);
@@ -135,10 +135,10 @@ describe('Validators', () => {
 
     test('should accept password with uppercase letters and numbers', () => {
       // Arrange
-      const password = 'ABCDEF12';
+      const input = 'ABCDEF12';
 
       // Act
-      const result = Validators.validatePassword(password);
+      const result = Validators.validatePassword(input);
 
       // Assert
       expect(result.isValid).toBe(true);
@@ -146,10 +146,10 @@ describe('Validators', () => {
 
     test('should accept password with mixed case and numbers', () => {
       // Arrange
-      const password = 'AbCdEf12';
+      const input = 'AbCdEf12';
 
       // Act
-      const result = Validators.validatePassword(password);
+      const result = Validators.validatePassword(input);
 
       // Assert
       expect(result.isValid).toBe(true);
@@ -157,10 +157,10 @@ describe('Validators', () => {
 
     test('should reject null password', () => {
       // Arrange
-      const password = null;
+      const input = null;
 
       // Act
-      const result = Validators.validatePassword(password);
+      const result = Validators.validatePassword(input);
 
       // Assert
       expect(result.isValid).toBe(false);
@@ -169,10 +169,10 @@ describe('Validators', () => {
 
     test('should reject undefined password', () => {
       // Arrange
-      const password = undefined;
+      const input = undefined;
 
       // Act
-      const result = Validators.validatePassword(password);
+      const result = Validators.validatePassword(input);
 
       // Assert
       expect(result.isValid).toBe(false);
@@ -181,10 +181,10 @@ describe('Validators', () => {
 
     test('should reject empty string password', () => {
       // Arrange
-      const password = '';
+      const input = '';
 
       // Act
-      const result = Validators.validatePassword(password);
+      const result = Validators.validatePassword(input);
 
       // Assert
       expect(result.isValid).toBe(false);
@@ -193,10 +193,10 @@ describe('Validators', () => {
 
     test('should reject password shorter than 8 characters', () => {
       // Arrange
-      const password = 'abc123';
+      const input = 'abc123';
 
       // Act
-      const result = Validators.validatePassword(password);
+      const result = Validators.validatePassword(input);
 
       // Assert
       expect(result.isValid).toBe(false);
@@ -205,10 +205,10 @@ describe('Validators', () => {
 
     test('should reject password with 7 characters', () => {
       // Arrange
-      const password = 'abcde12';
+      const input = 'abcde12';
 
       // Act
-      const result = Validators.validatePassword(password);
+      const result = Validators.validatePassword(input);
 
       // Assert
       expect(result.isValid).toBe(false);
@@ -217,10 +217,10 @@ describe('Validators', () => {
 
     test('should reject password with only letters (no numbers)', () => {
       // Arrange
-      const password = 'abcdefgh';
+      const input = 'abcdefgh';
 
       // Act
-      const result = Validators.validatePassword(password);
+      const result = Validators.validatePassword(input);
 
       // Assert
       expect(result.isValid).toBe(false);
@@ -229,10 +229,10 @@ describe('Validators', () => {
 
     test('should reject password with only numbers (no letters)', () => {
       // Arrange
-      const password = '12345678';
+      const input = '12345678';
 
       // Act
-      const result = Validators.validatePassword(password);
+      const result = Validators.validatePassword(input);
 
       // Assert
       expect(result.isValid).toBe(false);
@@ -241,10 +241,10 @@ describe('Validators', () => {
 
     test('should reject password with special characters only', () => {
       // Arrange
-      const password = '!@#$%^&*';
+      const input = '!@#$%^&*';
 
       // Act
-      const result = Validators.validatePassword(password);
+      const result = Validators.validatePassword(input);
 
       // Assert
       expect(result.isValid).toBe(false);

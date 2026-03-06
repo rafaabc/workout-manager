@@ -188,7 +188,7 @@ class Metrics {
       await this.loadMetrics();
 
       // Dispatch event to notify other components
-      window.dispatchEvent(new Event('metricsUpdated'));
+      globalThis.dispatchEvent(new Event('metricsUpdated'));
     } catch (error) {
       errorDiv.textContent = error.message || 'Failed to save goal';
       errorDiv.style.display = 'block';
