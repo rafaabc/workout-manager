@@ -3,7 +3,7 @@ import request from 'supertest';
 import { expect } from 'chai';
 const baseURL = process.env.BASE_URL;
 
-import { randomUsername, validPassword } from '../testUtils.js';
+import { randomUsername, validPassword, invalidPassword } from '../testUtils.js';
 
 describe('UR-1: User Register and Login', function () {
   let validUser;
@@ -21,7 +21,7 @@ describe('UR-1: User Register and Login', function () {
   });
 
   it('3 | Register user with invalid password', async function () {
-    const user = { username: randomUsername('invalid'), password: 'short' };
+    const user = { username: randomUsername('invalid'), password: invalidPassword() };
     const res = await request(baseURL).post('/api/users/register').send(user);
     expect(res.status).to.equal(400);
   });
@@ -40,7 +40,7 @@ describe('UR-1: User Register and Login', function () {
 
   it('6 | Login with incorrect password', async function () {
     // Usa o mesmo username válido, mas senha errada
-    const user = { username: validUser.username, password: 'WrongPassword123' };
+    const user = { username: validUser.username, password: validPassword() };
     const res = await request(baseURL).post('/api/users/login').send(user);
     expect(res.status).to.equal(401);
   });

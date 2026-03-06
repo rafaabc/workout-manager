@@ -36,6 +36,9 @@ jobs:
       - name: Audit dependencies
         run: npm run audit
 
+      - name: Run unit tests with coverage
+        run: npm run test:unit:coverage
+
       - name: Run API
         run: npm start &
 
