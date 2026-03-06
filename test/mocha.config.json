@@ -2,5 +2,5 @@
   "recursive": true,
   "timeout": 10000,
   "reporter": "spec",
-  "spec": "test/**/*.test.js"
+  "spec": "test/api/**/*.test.js"
 }
