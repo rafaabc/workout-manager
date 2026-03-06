@@ -35,6 +35,26 @@ export default defineConfig([
     },
   },
   {
+    files: ['frontend/test/**/*.{js,mjs,cjs}'],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+        describe: 'readonly',
+        it: 'readonly',
+        test: 'readonly',
+        expect: 'readonly',
+        beforeEach: 'readonly',
+        afterEach: 'readonly',
+        jest: 'readonly',
+      },
+    },
+    rules: {
+      'no-console': 'off',
+      'no-unused-vars': 'off',
+    },
+  },
+  {
     files: ['frontend/src/**/*.{js,mjs,cjs}'],
     rules: {
       'no-console': 'off',

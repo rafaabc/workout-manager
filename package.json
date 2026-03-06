@@ -18,6 +18,8 @@
     "format": "prettier --write src/**/*.js frontend/src/**/*.{js,css,html} test/**/*.js",
     "audit": "npm audit --audit-level=critical",
     "prepare": "husky install",
+    "test:front": "jest",
+    "test:front:coverage": "c8 jest",
     "k6:register": "k6 run performance/k6/login/register_user_performance.test.js",
     "k6:register:html": "k6 run --out html=performance/k6/login/register_user_performance.html performance/k6/login/register_user_performance.test.js"
   },
@@ -29,16 +31,22 @@
     "swagger-ui-express": "^5.0.1"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.0",
+    "@babel/preset-env": "^7.29.0",
     "@eslint/js": "^10.0.1",
+    "@jest/globals": "^30.2.0",
+    "babel-jest": "^30.2.0",
+    "c8": "^10.1.3",
     "chai": "^6.2.2",
     "dotenv": "^17.2.4",
     "eslint": "^10.0.2",
     "eslint-plugin-security": "^1.4.0",
     "globals": "^17.4.0",
     "husky": "^8.0.0",
+    "jest": "^30.2.0",
+    "jest-environment-jsdom": "^30.2.0",
     "lint-staged": "^15.2.4",
     "mocha": "^11.1.0",
-    "c8": "^10.1.3",
     "mochawesome": "^7.1.4",
     "prettier": "^3.0.0",
     "supertest": "^7.2.2"
