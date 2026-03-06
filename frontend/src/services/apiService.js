@@ -86,13 +86,13 @@ class ApiService {
         const netErr = new Error('Network error. Please check your connection.');
         netErr.status = HTTP_STATUS.INTERNAL_SERVER_ERROR;
         // notify app to redirect to error page
-        window.dispatchEvent(new Event('networkError'));
+        globalThis.dispatchEvent(new Event('networkError'));
         throw netErr;
       }
       // Handle special cases for thrown errors
       if (error.status === HTTP_STATUS.UNAUTHORIZED) {
         localStorage.removeItem(TOKEN_KEY);
-        window.dispatchEvent(new Event('unauthorized'));
+        globalThis.dispatchEvent(new Event('unauthorized'));
       }
       throw error;
     }
