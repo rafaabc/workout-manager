@@ -1,4 +1,4 @@
-name: CI - API Tests
+name: CI
 
 on:
   pull_request:
@@ -9,9 +9,10 @@ on:
       - main
 
 jobs:
-  test:
+  code-quality:
+    name: Code Quality
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 10
     steps:
       - name: Code Checkout
         uses: actions/checkout@v3
@@ -36,11 +37,51 @@ jobs:
       - name: Audit dependencies
         run: npm run audit
 
+  unit-tests:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    needs: code-quality
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
       - name: Run backend unit tests with coverage
         run: npm run test:backend:unit:coverage
 
       - name: Run frontend unit tests with coverage
         run: npm run test:frontend:unit:coverage
+
+  api-tests:
+    name: API Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    needs: unit-tests
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
 
       - name: Run API
         run: npm start &
