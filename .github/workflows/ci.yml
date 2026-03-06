@@ -37,10 +37,10 @@ jobs:
         run: npm run audit
 
       - name: Run backend unit tests with coverage
-        run: npm run test:backend:unitcoverage
+        run: npm run test:backend:unit:coverage
 
       - name: Run frontend unit tests with coverage
-        run: npm run test:frontend:unitcoverage
+        run: npm run test:frontend:unit:coverage
 
       - name: Run API
         run: npm start &
