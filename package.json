@@ -11,7 +11,7 @@
     "server": "cd frontend && http-server",
     "test": "mocha --config ./test/mocha.config.json",
     "test:backend:unit": "node --test test/unit/**/*.test.js",
-    "test:backend:unitcoverage": "c8 node --test test/unit/**/*.test.js",
+    "test:backend:unit:coverage": "c8 node --test test/unit/**/*.test.js",
     "test:report": "mocha --config ./test/mocha.config.json --reporter mochawesome --reporter-options reportDir=mochawesome-report,reportFilename=index,quiet=true,overwrite=true,html=true,json=false",
     "lint": "eslint . --ext .js --max-warnings 0",
     "lint:fix": "eslint . --ext .js --fix",
