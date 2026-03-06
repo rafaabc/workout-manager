@@ -2,6 +2,135 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import Validators from '../../../frontend/src/utils/validators.js';
 
+function assertValid(result) {
+  assert.strictEqual(result.isValid, true);
+}
+
+function assertInvalid(result, message) {
+  assert.strictEqual(result.isValid, false);
+  assert.strictEqual(result.message, message);
+}
+
+describe('Validators', () => {
+  // ─── validateUsername ──────────────────────
+
+  describe('validateUsername', () => {
+    it('should return valid for a proper username', () => {
+      assertValid(Validators.validateUsername('john'));
+    });
+
+    it('should return invalid when username is empty', () => {
+      assertInvalid(Validators.validateUsername(''), 'Username is required');
+    });
+
+    it('should return invalid when username is null', () => {
+      assertInvalid(Validators.validateUsername(null), 'Username is required');
+    });
+
+    it('should return invalid when username is undefined', () => {
+      assertInvalid(Validators.validateUsername(undefined), 'Username is required');
+    });
+
+    it('should return invalid when username is only spaces', () => {
+      assertInvalid(Validators.validateUsername('   '), 'Username is required');
+    });
+
+    it('should return invalid when username has less than 3 characters', () => {
+      assertInvalid(Validators.validateUsername('ab'), 'Username must have at least 3 characters');
+    });
+
+    it('should return valid for username with exactly 3 characters', () => {
+      assertValid(Validators.validateUsername('abc'));
+    });
+
+    it('should return valid for a long username', () => {
+      assertValid(Validators.validateUsername('a'.repeat(50)));
+    });
+  });
+
+  // ─── validatePassword ─────────────────────
+
+  describe('validatePassword', () => {
+    it('should return valid for a proper password with letters and numbers', () => {
+      assertValid(Validators.validatePassword('Abcdef12'));
+    });
+
+    it('should return invalid when password is empty', () => {
+      assertInvalid(Validators.validatePassword(''), 'Password is required');
+    });
+
+    it('should return invalid when password is null', () => {
+      assertInvalid(Validators.validatePassword(null), 'Password is required');
+    });
+
+    it('should return invalid when password is undefined', () => {
+      assertInvalid(Validators.validatePassword(undefined), 'Password is required');
+    });
+
+    it('should return invalid when password has less than 8 characters', () => {
+      assertInvalid(Validators.validatePassword('Ab1'), 'Password must have at least 8 characters');
+    });
+
+    it('should return invalid when password has only letters', () => {
+      assertInvalid(
+        Validators.validatePassword('abcdefgh'),
+        'Password must contain letters and numbers'
+      );
+    });
+
+    it('should return invalid when password has only numbers', () => {
+      assertInvalid(
+        Validators.validatePassword('12345678'),
+        'Password must contain letters and numbers'
+      );
+    });
+
+    it('should return valid for password with exactly 8 characters', () => {
+      assertValid(Validators.validatePassword('Abcdefg1'));
+    });
+
+    it('should return valid for long password with letters and numbers', () => {
+      assertValid(Validators.validatePassword('A1' + 'b'.repeat(20)));
+    });
+  });
+
+  // ─── validateGoal ────────────────────────
+
+  describe('validateGoal', () => {
+    it('should return valid for a positive number', () => {
+      assertValid(Validators.validateGoal(200));
+    });
+
+    it('should return valid for a string containing a positive number', () => {
+      assertValid(Validators.validateGoal('150'));
+    });
+
+    it('should return invalid for zero', () => {
+      assertInvalid(Validators.validateGoal(0), 'Goal must be a positive number');
+    });
+
+    it('should return invalid for negative number', () => {
+      assertInvalid(Validators.validateGoal(-5), 'Goal must be a positive number');
+    });
+
+    it('should return invalid for non-numeric string', () => {
+      assertInvalid(Validators.validateGoal('abc'), 'Goal must be a positive number');
+    });
+
+    it('should return invalid for NaN', () => {
+      assertInvalid(Validators.validateGoal(Number.NaN), 'Goal must be a positive number');
+    });
+
+    it('should return invalid for empty string', () => {
+      assertInvalid(Validators.validateGoal(''), 'Goal must be a positive number');
+    });
+
+    it('should return valid for a float greater than 0', () => {
+      assertValid(Validators.validateGoal(1.5));
+    });
+  });
+});
+
 describe('Validators', () => {
   // ─── validateUsername ──────────────────────────────────────
 
