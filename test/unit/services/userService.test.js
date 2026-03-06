@@ -4,7 +4,7 @@ import { register, login } from '../../../src/services/userService.js';
 import { resetDatabase, seedUser, validPassword } from '../testHelper.js';
 
 const MSG_REQUIRED = 'Username and password required';
-const MSG_PWD_RULE = 'Password must contain at least 8 characters, letters and numbers';
+const MSG_REGISTER_RULE = 'Password must contain at least 8 characters, letters and numbers';
 const MSG_INVALID_CREDS = 'Invalid credentials';
 
 describe('UserService', () => {
@@ -53,7 +53,7 @@ describe('UserService', () => {
 
     for (const [desc, pwd] of invalidPwdCases) {
       it(`should throw when password has ${desc}`, () => {
-        assert.throws(() => register('user1', pwd), { message: MSG_PWD_RULE });
+        assert.throws(() => register('user1', pwd), { message: MSG_REGISTER_RULE });
       });
     }
 
