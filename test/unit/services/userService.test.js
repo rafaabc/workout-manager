@@ -1,7 +1,7 @@
 import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { register, login } from '../../../src/services/userService.js';
-import { resetDatabase, seedUser } from '../testHelper.js';
+import { resetDatabase, seedUser, validPassword } from '../testHelper.js';
 
 describe('UserService', () => {
   beforeEach(() => {
@@ -14,7 +14,7 @@ describe('UserService', () => {
     it('should register a new user successfully', () => {
       // Arrange
       const username = 'newuser';
-      const password = 'Abcdef12';
+      const password = validPassword();
 
       // Act
       const result = register(username, password);

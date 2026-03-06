@@ -38,3 +38,10 @@ export function seedWorkout(username, day, month, year) {
 export function uniqueUsername(prefix = 'user') {
   return `${prefix}_${Math.random().toString(36).substring(2, 10)}`;
 }
+
+/**
+ * Returns a valid password that passes business rules (8+ chars, letters + numbers).
+ */
+export function validPassword() {
+  return 'Test' + Math.floor(Math.random() * 100000) + 'Aa';
+}

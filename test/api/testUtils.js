@@ -6,6 +6,10 @@ export function validPassword() {
   return 'Password' + Math.floor(Math.random() * 100000);
 }
 
+export function invalidPassword() {
+  return 'short';
+}
+
 export function randomDay() {
   return Math.floor(Math.random() * 27) + 1; // 1 a 28
 }

@@ -139,7 +139,7 @@ describe('Validators', () => {
     });
 
     it('should return invalid for NaN', () => {
-      const result = Validators.validateGoal(NaN);
+      const result = Validators.validateGoal(Number.NaN);
       assert.strictEqual(result.isValid, false);
       assert.strictEqual(result.message, 'Goal must be a positive number');
     });

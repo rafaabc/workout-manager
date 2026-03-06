@@ -1,7 +1,7 @@
 import { describe, it, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { users, workouts } from '../../../src/models/db.js';
-import { resetDatabase, seedUser, seedWorkout } from '../testHelper.js';
+import { resetDatabase, seedUser, seedWorkout, validPassword } from '../testHelper.js';
 
 describe('In-memory Database (db.js)', () => {
   beforeEach(() => {
@@ -16,7 +16,7 @@ describe('In-memory Database (db.js)', () => {
     });
 
     it('should store a user keyed by username', () => {
-      users['alice'] = { username: 'alice', password: 'Alice123', goal: 0 };
+      users['alice'] = { username: 'alice', password: validPassword(), goal: 0 };
 
       assert.ok(users['alice']);
       assert.strictEqual(users['alice'].username, 'alice');
