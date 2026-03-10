@@ -13,6 +13,7 @@ describe('ApiService', () => {
   beforeEach(() => {
     localStorage.clear();
     jest.restoreAllMocks();
+    jest.spyOn(console, 'error').mockImplementation(() => {});
     // Reset any custom event listeners
   });
 
