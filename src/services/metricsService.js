@@ -1,20 +1,32 @@
-import { users, workouts } from '../models/db.js';
+let userRepository;
+let workoutRepository;
+let goalRepository;
+
+export function setMetricsRepositories(userRepo, workoutRepo, goalRepo) {
+  userRepository = userRepo;
+  workoutRepository = workoutRepo;
+  goalRepository = goalRepo;
+}
 
 export function getMetrics(username) {
-  const user = users[username];
+  const user = userRepository.findUserByUsername(username);
   if (!user) throw new Error('User not found');
 
-  // goal defaults to zero if not explicitly set by the user
-  const goal = user.goal || 0;
-  const workoutsUser = workouts[username] || [];
+  const goalRecord = goalRepository.getGoalByUser(user.id);
+  const goal = goalRecord ? goalRecord.annual_goal : 0;
+
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1;
 
-  // build an array with totals for each month (1–12)
+  const workoutsByMonth = workoutRepository.countWorkoutsByYear(user.id, currentYear);
+  const monthMap = {};
+  for (const row of workoutsByMonth) {
+    monthMap[row.month] = row.totalWorkouts;
+  }
+
   const monthlyData = Array.from({ length: 12 }, (_, idx) => {
     const month = idx + 1;
-    const total = workoutsUser.filter(t => t.year == currentYear && t.month == month).length;
-    return { month, totalWorkouts: total };
+    return { month, totalWorkouts: monthMap[month] || 0 };
   });
 
   const totalYear = monthlyData.reduce((sum, m) => sum + m.totalWorkouts, 0);
@@ -25,10 +37,11 @@ export function getMetrics(username) {
 }
 
 export function setGoal(username, goal) {
-  if (!users[username]) throw new Error('User not found');
+  const user = userRepository.findUserByUsername(username);
+  if (!user) throw new Error('User not found');
   if (typeof goal !== 'number' || goal <= 0) {
     throw new Error('The annual goal should be a number greater than zero.');
   }
-  users[username].goal = goal;
-  return goal; // return the new value so controllers can send it back
+  goalRepository.setGoal(user.id, goal);
+  return goal;
 }

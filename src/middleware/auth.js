@@ -1,7 +1,7 @@
 import jwt from 'jsonwebtoken';
-const SECRET = 'supersecretkey';
+import { JWT_SECRET } from '../config.js';
 
-export default function (req, res, next) {
+export default function authMiddleware(req, res, next) {
   if (
     req.path.startsWith('/api/users') ||
     req.path.startsWith('/api/login') ||
@@ -13,7 +13,7 @@ export default function (req, res, next) {
   if (!authHeader) return res.status(401).json({ error: 'Token not provide' });
   const token = authHeader.split(' ')[1];
   if (!token) return res.status(401).json({ error: 'Invalid Token' });
-  jwt.verify(token, SECRET, (err, user) => {
+  jwt.verify(token, JWT_SECRET, (err, user) => {
     if (err) return res.status(403).json({ error: 'Invalid Token' });
     req.user = user;
     next();

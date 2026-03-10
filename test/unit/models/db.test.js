@@ -1,50 +1,62 @@
-import { describe, it, beforeEach } from 'node:test';
+import { describe, it, before, beforeEach, after } from 'node:test';
 import assert from 'node:assert/strict';
-import { users, workouts } from '../../../src/models/db.js';
-import { resetDatabase, seedUser, seedWorkout, validPassword } from '../testHelper.js';
+import { createTestDatabase, clearTestDatabase } from '../../integration/testDatabase.js';
+import UserRepository from '../../../src/repositories/userRepository.js';
+import WorkoutRepository from '../../../src/repositories/workoutRepository.js';
+import GoalRepository from '../../../src/repositories/goalRepository.js';
 
-describe('In-memory Database (db.js)', () => {
+describe('SQLite Database (database layer)', () => {
+  let db;
+  let userRepo;
+  let workoutRepo;
+  let goalRepo;
+
+  before(() => {
+    db = createTestDatabase();
+    userRepo = new UserRepository(db);
+    workoutRepo = new WorkoutRepository(db);
+    goalRepo = new GoalRepository(db);
+  });
+
   beforeEach(() => {
-    resetDatabase();
+    clearTestDatabase(db);
+  });
+
+  after(() => {
+    db.close();
   });
 
   // ─── users store ───────────────────────────────────────────
 
   describe('users store', () => {
     it('should start empty after reset', () => {
-      assert.deepStrictEqual(Object.keys(users), []);
+      const user = userRepo.findUserByUsername('anyone');
+      assert.strictEqual(user, undefined);
     });
 
-    it('should store a user keyed by username', () => {
-      users['alice'] = { username: 'alice', password: validPassword(), goal: 0 };
-
-      assert.ok(users['alice']);
-      assert.strictEqual(users['alice'].username, 'alice');
+    it('should store a user by username', () => {
+      userRepo.createUser('alice', 'Pass1234');
+      const user = userRepo.findUserByUsername('alice');
+      assert.ok(user);
+      assert.strictEqual(user.username, 'alice');
     });
 
     it('should allow multiple users', () => {
-      seedUser('u1', 'Pass1234');
-      seedUser('u2', 'Pass1234');
-
-      assert.strictEqual(Object.keys(users).length, 2);
-    });
-
-    it('should overwrite user data when same key is set again', () => {
-      seedUser('u1', 'Pass1234', 0);
-      users['u1'].goal = 100;
-
-      assert.strictEqual(users['u1'].goal, 100);
+      userRepo.createUser('u1', 'Pass1234');
+      userRepo.createUser('u2', 'Pass1234');
+      const u1 = userRepo.findUserByUsername('u1');
+      const u2 = userRepo.findUserByUsername('u2');
+      assert.ok(u1);
+      assert.ok(u2);
     });
 
     it('should return undefined for a non-existing user', () => {
-      assert.strictEqual(users['ghost'], undefined);
+      assert.strictEqual(userRepo.findUserByUsername('ghost'), undefined);
     });
 
-    it('should delete a user correctly', () => {
-      seedUser('toRemove', 'Pass1234');
-      delete users['toRemove'];
-
-      assert.strictEqual(users['toRemove'], undefined);
+    it('should enforce unique username constraint', () => {
+      userRepo.createUser('unique', 'Pass1234');
+      assert.throws(() => userRepo.createUser('unique', 'Other123'));
     });
   });
 
@@ -52,64 +64,62 @@ describe('In-memory Database (db.js)', () => {
 
   describe('workouts store', () => {
     it('should start empty after reset', () => {
-      assert.deepStrictEqual(Object.keys(workouts), []);
+      const user = userRepo.createUser('athlete', 'Pass1234');
+      const workouts = workoutRepo.findWorkoutsByMonth(user.id, 1, 2026);
+      assert.deepStrictEqual(workouts, []);
     });
 
-    it('should store workouts array per user', () => {
-      seedUser('athlete');
-      seedWorkout('athlete', 1, 3, 2026);
-
-      assert.ok(Array.isArray(workouts['athlete']));
-      assert.strictEqual(workouts['athlete'].length, 1);
+    it('should store workouts per user', () => {
+      const user = userRepo.createUser('athlete', 'Pass1234');
+      workoutRepo.createWorkout(user.id, 1, 3, 2026);
+      const workouts = workoutRepo.findWorkoutsByMonth(user.id, 3, 2026);
+      assert.strictEqual(workouts.length, 1);
     });
 
     it('should keep workouts isolated between users', () => {
-      seedUser('a');
-      seedUser('b');
-      seedWorkout('a', 1, 1, 2026);
-      seedWorkout('b', 2, 2, 2026);
-      seedWorkout('b', 3, 2, 2026);
+      const a = userRepo.createUser('a', 'Pass1234');
+      const b = userRepo.createUser('b', 'Pass1234');
+      workoutRepo.createWorkout(a.id, 1, 1, 2026);
+      workoutRepo.createWorkout(b.id, 2, 2, 2026);
+      workoutRepo.createWorkout(b.id, 3, 2, 2026);
 
-      assert.strictEqual(workouts['a'].length, 1);
-      assert.strictEqual(workouts['b'].length, 2);
+      const aWorkouts = workoutRepo.findWorkoutsByMonth(a.id, 1, 2026);
+      const bWorkouts = workoutRepo.findWorkoutsByMonth(b.id, 2, 2026);
+      assert.strictEqual(aWorkouts.length, 1);
+      assert.strictEqual(bWorkouts.length, 2);
     });
 
     it('should store workout entries with day, month, year', () => {
-      seedUser('athlete');
-      seedWorkout('athlete', 15, 6, 2026);
-
-      const w = workouts['athlete'][0];
+      const user = userRepo.createUser('athlete', 'Pass1234');
+      workoutRepo.createWorkout(user.id, 15, 6, 2026);
+      const w = workoutRepo.findWorkoutByDate(user.id, 15, 6, 2026);
       assert.strictEqual(w.day, 15);
       assert.strictEqual(w.month, 6);
       assert.strictEqual(w.year, 2026);
     });
 
-    it('should allow removing a workout by splice', () => {
-      seedUser('athlete');
-      seedWorkout('athlete', 1, 1, 2026);
-      seedWorkout('athlete', 2, 1, 2026);
-
-      workouts['athlete'].splice(0, 1);
-      assert.strictEqual(workouts['athlete'].length, 1);
-      assert.strictEqual(workouts['athlete'][0].day, 2);
+    it('should allow removing a workout', () => {
+      const user = userRepo.createUser('athlete', 'Pass1234');
+      workoutRepo.createWorkout(user.id, 1, 1, 2026);
+      workoutRepo.createWorkout(user.id, 2, 1, 2026);
+      workoutRepo.deleteWorkout(user.id, 1, 1, 2026);
+      const workouts = workoutRepo.findWorkoutsByMonth(user.id, 1, 2026);
+      assert.strictEqual(workouts.length, 1);
+      assert.strictEqual(workouts[0].day, 2);
     });
   });
 
-  // ─── resetDatabase helper ─────────────────────────────────
+  // ─── clearTestDatabase helper ─────────────────────────────
 
-  describe('resetDatabase (testHelper)', () => {
-    it('should clear all users and workouts', () => {
-      // Arrange
-      seedUser('a');
-      seedUser('b');
-      seedWorkout('a', 1, 1, 2026);
+  describe('clearTestDatabase (testDatabase helper)', () => {
+    it('should clear all users, workouts and goals', () => {
+      const user = userRepo.createUser('a', 'Pass1234');
+      workoutRepo.createWorkout(user.id, 1, 1, 2026);
+      goalRepo.setGoal(user.id, 200);
 
-      // Act
-      resetDatabase();
+      clearTestDatabase(db);
 
-      // Assert
-      assert.strictEqual(Object.keys(users).length, 0);
-      assert.strictEqual(Object.keys(workouts).length, 0);
+      assert.strictEqual(userRepo.findUserByUsername('a'), undefined);
     });
   });
 });

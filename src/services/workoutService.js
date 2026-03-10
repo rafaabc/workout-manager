@@ -1,20 +1,28 @@
-import { workouts } from '../models/db.js';
+let workoutRepository;
+let userRepository;
+
+export function setWorkoutRepositories(workoutRepo, userRepo) {
+  workoutRepository = workoutRepo;
+  userRepository = userRepo;
+}
 
 export function getCalendar(username, month, year) {
-  if (!workouts[username]) workouts[username] = [];
-  return workouts[username].filter(t => t.month == month && t.year == year);
+  const user = userRepository.findUserByUsername(username);
+  if (!user) return [];
+  return workoutRepository.findWorkoutsByMonth(user.id, month, year);
 }
 
 export function setWorkout(username, day, month, year) {
-  if (!workouts[username]) workouts[username] = [];
-  if (workouts[username].some(t => t.day == day && t.month == month && t.year == year))
-    throw new Error('Treino já marcado para este day');
-  workouts[username].push({ day, month, year });
+  const user = userRepository.findUserByUsername(username);
+  if (!user) throw new Error('User not found');
+  const existing = workoutRepository.findWorkoutByDate(user.id, day, month, year);
+  if (existing) throw new Error('Treino já marcado para este day');
+  workoutRepository.createWorkout(user.id, day, month, year);
 }
 
 export function unsetWorkout(username, day, month, year) {
-  if (!workouts[username]) workouts[username] = [];
-  const idx = workouts[username].findIndex(t => t.day == day && t.month == month && t.year == year);
-  if (idx === -1) throw new Error('Workout not found');
-  workouts[username].splice(idx, 1);
+  const user = userRepository.findUserByUsername(username);
+  if (!user) throw new Error('User not found');
+  const result = workoutRepository.deleteWorkout(user.id, day, month, year);
+  if (result.changes === 0) throw new Error('Workout not found');
 }

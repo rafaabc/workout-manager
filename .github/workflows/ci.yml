@@ -60,6 +60,9 @@ jobs:
       - name: Run backend unit tests with coverage
         run: npm run test:backend:unit:coverage
 
+      - name: Run integration tests with coverage
+        run: npm run test:integration:coverage
+
       - name: Run frontend unit tests with coverage
         run: npm run test:frontend:unit:coverage
 

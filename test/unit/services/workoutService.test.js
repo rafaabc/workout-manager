@@ -1,9 +1,13 @@
-import { describe, it, beforeEach } from 'node:test';
+import { describe, it, before, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { getCalendar, setWorkout, unsetWorkout } from '../../../src/services/workoutService.js';
-import { resetDatabase, seedUser, seedWorkout } from '../testHelper.js';
+import { resetDatabase, seedUser, seedWorkout, initTestDatabase } from '../testHelper.js';
 
 describe('WorkoutService', () => {
+  before(() => {
+    initTestDatabase();
+  });
+
   beforeEach(() => {
     resetDatabase();
     seedUser('athlete');
@@ -106,7 +110,8 @@ describe('WorkoutService', () => {
       assert.doesNotThrow(() => setWorkout('athlete', 10, 3, 2026));
     });
 
-    it('should initialize workouts array for a new user', () => {
+    it('should allow setting a workout for a different registered user', () => {
+      seedUser('brandnew');
       assert.doesNotThrow(() => setWorkout('brandnew', 1, 1, 2026));
       const result = getCalendar('brandnew', 1, 2026);
       assert.strictEqual(result.length, 1);
@@ -154,9 +159,9 @@ describe('WorkoutService', () => {
       assert.doesNotThrow(() => setWorkout('athlete', 5, 3, 2026));
     });
 
-    it('should initialize workouts array for unknown user before throwing', () => {
+    it('should throw when user does not exist', () => {
       assert.throws(() => unsetWorkout('unknown', 5, 3, 2026), {
-        message: 'Workout not found',
+        message: 'User not found',
       });
     });
   });
