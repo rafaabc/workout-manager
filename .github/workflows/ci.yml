@@ -86,22 +86,5 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run API
-        run: npm start &
-
-      - name: Wait API startup
-        run: |
-          for i in {1..20}; do
-            if nc -z localhost 3000; then
-              echo "API is running"
-              break
-            fi
-            echo "Waiting for API..."
-            sleep 2
-          done
-
-      - name: Define BASE_URL for tests
-        run: echo "BASE_URL=http://localhost:3000" >> $GITHUB_ENV
-
       - name: Run API tests
-        run: npm test
+        run: npm run test:api

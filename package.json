@@ -7,23 +7,23 @@
     "node": ">=21"
   },
   "scripts": {
-    "start": "node src/app.js",
+    "start": "node src/server.js",
     "server": "cd frontend && http-server",
-    "test": "mocha --config ./test/mocha.config.json",
-    "test:backend:unit": "node --test test/unit/**/*.test.js",
-    "test:backend:unit:coverage": "c8 node --test test/unit/**/*.test.js",
-    "test:integration": "node --test test/integration/**/*.test.js",
-    "test:integration:coverage": "c8 node --test test/integration/**/*.test.js",
-    "test:report": "mocha --config ./test/mocha.config.json --reporter mochawesome --reporter-options reportDir=mochawesome-report,reportFilename=index,quiet=true,overwrite=true,html=true,json=false",
     "lint": "eslint . --ext .js --max-warnings 0",
     "lint:fix": "eslint . --ext .js --fix",
     "format": "prettier --write src/**/*.js frontend/src/**/*.{js,css,html} test/**/*.js",
     "audit": "npm audit --audit-level=critical",
-    "prepare": "husky install",
+    "test:backend:unit": "node --test test/unit/**/*.test.js",
+    "test:backend:unit:coverage": "c8 node --test test/unit/**/*.test.js",
+    "test:integration": "node --test test/integration/**/*.test.js",
+    "test:integration:coverage": "c8 node --test test/integration/**/*.test.js",
     "test:frontend:unit": "jest",
     "test:frontend:unit:coverage": "c8 jest",
+    "test:api": "mocha --config ./test/mocha.config.json",
+    "test:api:report": "mocha --config ./test/mocha.config.json --reporter mochawesome --reporter-options reportDir=mochawesome-report,reportFilename=index,quiet=true,overwrite=true,html=true,json=false",
     "k6:register": "k6 run performance/k6/login/register_user_performance.test.js",
-    "k6:register:html": "k6 run --out html=performance/k6/login/register_user_performance.html performance/k6/login/register_user_performance.test.js"
+    "k6:register:html": "k6 run --out html=performance/k6/login/register_user_performance.html performance/k6/login/register_user_performance.test.js",
+    "prepare": "husky install"
   },
   "dependencies": {
     "better-sqlite3": "^12.6.2",
