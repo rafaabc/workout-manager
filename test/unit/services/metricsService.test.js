@@ -1,11 +1,15 @@
-import { describe, it, beforeEach } from 'node:test';
+import { describe, it, before, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { getMetrics, setGoal } from '../../../src/services/metricsService.js';
-import { resetDatabase, seedUser, seedWorkout } from '../testHelper.js';
+import { resetDatabase, seedUser, seedWorkout, initTestDatabase } from '../testHelper.js';
 
 describe('MetricsService', () => {
   const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth() + 1;
+
+  before(() => {
+    initTestDatabase();
+  });
 
   beforeEach(() => {
     resetDatabase();

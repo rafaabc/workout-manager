@@ -1,13 +1,18 @@
-import { describe, it, beforeEach } from 'node:test';
+import { describe, it, before, beforeEach } from 'node:test';
 import assert from 'node:assert/strict';
 import { register, login } from '../../../src/services/userService.js';
-import { resetDatabase, seedUser, validPassword } from '../testHelper.js';
+import { getMetrics } from '../../../src/services/metricsService.js';
+import { resetDatabase, seedUser, validPassword, initTestDatabase } from '../testHelper.js';
 
 const MSG_REQUIRED = 'Username and password required';
 const MSG_REGISTER_RULE = 'Password must contain at least 8 characters, letters and numbers';
 const MSG_INVALID_CREDS = 'Invalid credentials';
 
 describe('UserService', () => {
+  before(() => {
+    initTestDatabase();
+  });
+
   beforeEach(() => {
     resetDatabase();
   });
@@ -61,10 +66,10 @@ describe('UserService', () => {
       assert.deepStrictEqual(register('user1', 'Abcdefg1'), { username: 'user1' });
     });
 
-    it('should initialize new user with goal equal to 0', async () => {
+    it('should initialize new user with goal defaulting to 0', () => {
       register('user1', 'Abcdef12');
-      const { users } = await import('../../../src/models/db.js');
-      assert.strictEqual(users['user1'].goal, 0);
+      const metrics = getMetrics('user1');
+      assert.strictEqual(metrics.goal, 0);
     });
   });
 

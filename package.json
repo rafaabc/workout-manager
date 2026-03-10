@@ -12,6 +12,8 @@
     "test": "mocha --config ./test/mocha.config.json",
     "test:backend:unit": "node --test test/unit/**/*.test.js",
     "test:backend:unit:coverage": "c8 node --test test/unit/**/*.test.js",
+    "test:integration": "node --test test/integration/**/*.test.js",
+    "test:integration:coverage": "c8 node --test test/integration/**/*.test.js",
     "test:report": "mocha --config ./test/mocha.config.json --reporter mochawesome --reporter-options reportDir=mochawesome-report,reportFilename=index,quiet=true,overwrite=true,html=true,json=false",
     "lint": "eslint . --ext .js --max-warnings 0",
     "lint:fix": "eslint . --ext .js --fix",
@@ -24,6 +26,7 @@
     "k6:register:html": "k6 run --out html=performance/k6/login/register_user_performance.html performance/k6/login/register_user_performance.test.js"
   },
   "dependencies": {
+    "better-sqlite3": "^12.6.2",
     "body-parser": "^1.20.4",
     "cors": "^2.8.6",
     "express": "^4.22.1",

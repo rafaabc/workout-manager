@@ -1,5 +1,5 @@
 import express from 'express';
-import path from 'path';
+import * as path from 'node:path';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import swaggerUi from 'swagger-ui-express';
@@ -8,6 +8,24 @@ import authMiddleware from './middleware/auth.js';
 import userRoutes from './routes/userRoutes.js';
 import workoutRoutes from './routes/workoutRoutes.js';
 import metricsRoutes from './routes/metricsRoutes.js';
+import { initializeDatabase } from './database/database.js';
+import UserRepository from './repositories/userRepository.js';
+import WorkoutRepository from './repositories/workoutRepository.js';
+import GoalRepository from './repositories/goalRepository.js';
+import { setUserRepository } from './services/userService.js';
+import { setWorkoutRepositories } from './services/workoutService.js';
+import { setMetricsRepositories } from './services/metricsService.js';
+
+// Initialize database and repositories
+const db = initializeDatabase();
+const userRepository = new UserRepository(db);
+const workoutRepository = new WorkoutRepository(db);
+const goalRepository = new GoalRepository(db);
+
+// Wire repositories into services
+setUserRepository(userRepository);
+setWorkoutRepositories(workoutRepository, userRepository);
+setMetricsRepositories(userRepository, workoutRepository, goalRepository);
 
 const app = express();
 const __dirname = path.dirname(new URL(import.meta.url).pathname);
